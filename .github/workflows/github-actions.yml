@@ -33,7 +33,7 @@ jobs:
         shell: bash
 
       # gradlew 실행 권한 부여
-      - name: Grant execute permisson for gradlew
+      - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
       # Gradle 빌드
@@ -47,9 +47,12 @@ jobs:
           docker build -f Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }} .
           docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:latest
 
-      # appleboy/ssh-action@master 액션을 사용하여 지정한 서버에 ssh로 접속하고, script를 실행합니다.
+  deploy:
+    needs: build  # build 작업이 완료된 후 실행
+    runs-on: ubuntu-latest
+    steps:
+      # appleboy/ssh-action@master 액션을 사용하여 지정한 서버에 ssh로 접속하고, script를 실행
       # script의 내용은 도커의 기존 프로세스들을 제거하고, docker repo로부터 방금 위에서 push한 내용을 pull 받아 실행
-      # 실행 시, docker-compose를 사용합니다.
       - name: Deploy to server
         uses: appleboy/ssh-action@master
         id: deploy
@@ -60,13 +63,15 @@ jobs:
           script: |
             # Docker Login
             sudo docker login -u "${{ secrets.DOCKER_USERNAME }}" -p "${{ secrets.DOCKER_PASSWORD }}"
-        
-            # Stop and Remove Existing Containers
-            sudo docker rm -f $(sudo docker ps -qa || true)
-        
+            
+            # Stop and Remove Existing spring-app Container
+            if sudo docker ps -q --filter "name=spring-app"; then
+              sudo docker rm -f spring-app
+            fi
+            
             # Pull Latest Docker Image
             sudo docker pull "${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:latest"
-        
+            
             # Start Containers with Docker Compose
             if [ -f /home/ubuntu/docker-compose.yml ]; then
               docker-compose up -d
@@ -74,6 +79,6 @@ jobs:
               echo "docker-compose.yml not found. Exiting."
               exit 1
             fi
-        
+            
             # Clean Up Unused Docker Images
             sudo docker image prune -f

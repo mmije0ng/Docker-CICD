@@ -25,3 +25,7 @@ services:
 networks:
   app-network:
     driver: bridge
+
+# Nginx가 Docker 네트워크에 연결되지 않았다면 추가
+#sudo docker network connect app-network nginx-container
+#sudo docker network connect app-network spring-app
