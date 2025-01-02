@@ -37,8 +37,8 @@ jobs:
         run: chmod +x gradlew
 
       # Gradle 빌드
-      - name: Build with Gradle (without Test)
-        run: ./gradlew clean build -x test --stacktrace
+      - name: Build Gradle
+        run: ./gradlew clean build
 
       # dockerfile을 통해 이미지를 빌드하고, 이를 docker repo로 push
       - name: Docker build & push to docker repo
