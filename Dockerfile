@@ -5,4 +5,4 @@ FROM openjdk:17-jdk-slim
 COPY build/libs/Docker-CICD-server-0.0.1-SNAPSHOT.jar Docker-CICD-server-dev.jar
 
 # 컨테이너 실행 명령 설정
-ENTRYPOINT ["java", "-jar", "/Docker-CICD-server-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "/Docker-CICD-server-dev.jar"]
