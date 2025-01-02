@@ -14,7 +14,7 @@ java {
 }
 
 bootJar {
-	archiveBaseName = 'study-API-server'
+	archiveBaseName = 'Docker-CICD-server'
 	archiveVersion = '0.0.1-SNAPSHOT'
 }
 
