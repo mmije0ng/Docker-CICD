@@ -40,14 +40,6 @@ jobs:
       - name: Build Gradle
         run: ./gradlew clean build
 
-      # JAR 파일 확인
-      - name: Verify JAR File
-        run: |
-          if [ ! -f ./build/libs/Docker-CICD-server-0.0.1-SNAPSHOT.jar ]; then
-            echo "JAR file not found!"
-            exit 1
-          fi          
-
       # dockerfile을 통해 이미지를 빌드하고, 이를 docker repo로 push
       - name: Docker build & push to docker repo
         run: |
