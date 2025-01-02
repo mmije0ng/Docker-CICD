@@ -2,7 +2,7 @@ version: '3.9'
 services:
   backend:
     container_name: spring-app
-    image: image-spring-app
+    image: mmije0ng/docker-cicd:latest
     ports:
       - "8080:8080"  # 호스트 8080 -> 컨테이너 8080
     networks:
