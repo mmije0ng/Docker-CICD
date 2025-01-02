@@ -8,20 +8,19 @@ services:
     networks:
       - app-network
 
-#  nginx:
-#    image: nginx:latest
-#    container_name: nginx-container
-#    ports:
-#      - "80:80"   # HTTP 요청 처리
-#      - "443:443" # HTTPS 요청 처리
-#    volumes:
-#      - /etc/letsencrypt:/etc/letsencrypt:ro  # 인증서 파일
-#      - ./nginx.conf:/etc/nginx/nginx.conf:ro  # nginx.conf 파일
-#    depends_on:
-#      - backend-1
-#      - backend-2
-#    networks:
-#      - app-network
+  nginx:
+    image: nginx:latest
+    container_name: nginx-container
+    ports:
+      - "80:80"   # HTTP 요청 처리
+      - "443:443" # HTTPS 요청 처리    networks:
+    networks:
+      - app-network
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt:ro  # 인증서 파일
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro  # nginx.conf 파일
+    depends_on:
+      - backend
 
 networks:
   app-network:
