@@ -57,9 +57,23 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ubuntu
           key: ${{ secrets.KEY }}
-        # 'script'는 'with'의 하위가 아니라 독립된 명령어 실행 섹션이어야 함
           script: |
-            sudo docker rm -f $(docker ps -qa)
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
-            docker-compose up -d
-            docker image prune -f
+            # Docker Login
+            sudo docker login -u "${{ secrets.DOCKER_USERNAME }}" -p "${{ secrets.DOCKER_PASSWORD }}"
+        
+            # Stop and Remove Existing Containers
+            sudo docker rm -f $(sudo docker ps -qa || true)
+        
+            # Pull Latest Docker Image
+            sudo docker pull "${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:latest"
+        
+            # Start Containers with Docker Compose
+            if [ -f docker-compose.yml ]; then
+              docker-compose up -d
+            else
+              echo "docker-compose.yml not found. Exiting."
+              exit 1
+            fi
+        
+            # Clean Up Unused Docker Images
+            sudo docker image prune -f
