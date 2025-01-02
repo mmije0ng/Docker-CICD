@@ -64,10 +64,10 @@ jobs:
             # Docker Login
             sudo docker login -u "${{ secrets.DOCKER_USERNAME }}" -p "${{ secrets.DOCKER_PASSWORD }}"
             
-            # Stop and Remove Existing spring-app Container
-            if sudo docker ps -q --filter "name=spring-app"; then
-              sudo docker rm -f spring-app
-            fi
+            # Stop and Remove All Running Containers
+              if [ "$(sudo docker ps -q)" ]; then
+                sudo docker rm -f $(sudo docker ps -q)
+              fi
             
             # Pull Latest Docker Image
             sudo docker pull "${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:latest"
